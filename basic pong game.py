@@ -6,25 +6,33 @@ pygame.init()
 clock = pygame.time.Clock()
 
 
+class game_vars:
+
+    top_hız_x = 7 * random.choice((1, -1))
+    top_hız_y = 7 * random.choice((1, -1))
+    oyuncu_skor = 0
+    rakip_skor = 0
+
+
 def top_hareketleri():
-    global top_hız_x, top_hız_y, oyuncu_skor, rakip_skor
-    top.x += top_hız_x
-    top.y += top_hız_y
+
+    top.x += game_vars.top_hız_x
+    top.y += game_vars.top_hız_y
 
     if top.top <= 0 or top.bottom >= screen_height:
-        top_hız_y *= -1
+        game_vars.top_hız_y *= -1
 
     if top.left <= 0:
-        oyuncu_skor += 1
+        game_vars.oyuncu_skor += 1
         top_yeniden_başlat()
 
     if top.right >= screen_width:
-        rakip_skor += 1
+        game_vars.rakip_skor += 1
         top_yeniden_başlat()
 
     # çarpışma durumu
     if top.colliderect(oyuncu) or top.colliderect(rakip):
-        top_hız_x *= -1
+        game_vars.top_hız_x *= -1
 
 
 def oyuncu_hareketleri():
@@ -47,10 +55,10 @@ def rakip_hareketleri():
 
 
 def top_yeniden_başlat():  # top ekrandan çıkınca merkezden tekrar başlatıyor
-    global top_hız_x, top_hız_y
+
     top.center = (int(screen_width/2), int(screen_height/2))
-    top_hız_x *= random.choice((1, -1))
-    top_hız_y *= random.choice((1, -1))
+    game_vars.top_hız_x *= random.choice((1, -1))
+    game_vars.top_hız_y *= random.choice((1, -1))
 
 
 # oyun ekranının ölçüleri (siyah ekran)
@@ -70,14 +78,10 @@ rakip = pygame.Rect(10, int(screen_height/2 - 50), 5, 100)
 bg_color = pygame.Color('grey12')
 açık_gri = (200, 200, 200)
 
-top_hız_x = 7 * random.choice((1, -1))
-top_hız_y = 7 * random.choice((1, -1))
 oyuncu_hız = 0
 rakip_hız = 9
 
 # Text variable'ları
-oyuncu_skor = 0
-rakip_skor = 0
 oyun_font = pygame.font.Font("freesansbold.ttf", 20)
 
 while True:
@@ -109,10 +113,10 @@ while True:
     pygame.draw.ellipse(screen, açık_gri, top)
     pygame.draw.aaline(screen, açık_gri, (screen_width/2, 0), (screen_width/2, screen_height))
 
-    oyuncu_text = oyun_font.render(f"{oyuncu_skor}", False, açık_gri)
+    oyuncu_text = oyun_font.render(f"{game_vars.oyuncu_skor}", False, açık_gri)
     screen.blit(oyuncu_text, (510, 10))
 
-    rakip_text = oyun_font.render(f"{rakip_skor}", False, açık_gri)
+    rakip_text = oyun_font.render(f"{game_vars.rakip_skor}", False, açık_gri)
     screen.blit(rakip_text, (480, 10))
 
 
